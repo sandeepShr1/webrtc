@@ -21,14 +21,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.use(cors({
-      origin: 'http://localhost:3000',
+      origin: ['http://localhost:3000', "http://192.168.1.5:3000", "http://169.254.46.82:3000"],
       methods: ['GET', 'POST', 'PUT', 'DELETE'],
       allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
 const io = new Server(httpServer, {
       cors: {
-            origin: 'http://localhost:3000',
+            origin: ['http://localhost:3000', "http://192.168.1.5:3000", "http://169.254.46.82:3000"],
             methods: ['GET', 'POST'],
       },
 });
@@ -57,6 +57,19 @@ io.on('connection', (socket) => {
             // ✅ notify others in the room
             // socket.to(roomName).emit('user-joined', { userId, socketId: socket.id });
       });
+      // offer
+      socket.on("send-offer", ({ data }) => {
+            signalMessageToOtherUser(data, "send-offer")
+            console.log("offer send to", data)
+      })
+      socket.on("send-answer", ({ data }) => {
+            signalMessageToOtherUser(data, "send-answer")
+            console.log("answer send to", data)
+      })
+      socket.on("send-iceCandidates", ({ data }) => {
+            signalMessageToOtherUser(data, "send-iceCandidates")
+            console.log("send-iceCandidates send to", data)
+      })
       socket.on("exit-room", ({ data }) => exitRoom(data))
       socket.on('disconnect', () => {
             console.log("discommected")
@@ -64,6 +77,16 @@ io.on('connection', (socket) => {
       });
 });
 
+// >>>>> WEBSOCKET SERVER Generic FUNCTIONS
+
+function signalMessageToOtherUser(data, type) {
+      const { otherUserId } = data;
+      const message = {
+            label: constants.labels.WEBRTC_PROCESS,
+            data: data
+      }
+      sendWebSocketMessageToUser(otherUserId, "message", message);
+}
 
 
 // send a message to a specific user

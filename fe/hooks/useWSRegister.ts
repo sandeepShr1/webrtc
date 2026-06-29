@@ -9,9 +9,13 @@ type UseWebRTCOptions = {
       onJoinSuccess?: (data: any) => void;
       onJoinFailure?: (data: any) => void;
       onRoomDisconnect?: (data: any) => void;
+      onOffer?: (offer: RTCSessionDescriptionInit) => void;
+      onAnswer?: (answer: RTCSessionDescriptionInit) => void;
+      onHandleIceCandidates?: (candidate: RTCIceCandidate) => void;
+      onJoinNotify?: (data: any) => void;
 };
 
-export function useWebRTC(options: UseWebRTCOptions = {}) {
+export function useWsRegister(options: UseWebRTCOptions = {}) {
       const userId = useAppStore((state) => state.userId);
       const setUserId = useAppStore((state) => state.setUserId);
       const setWsConnection = useAppStore((state) => state.setWsConnection);

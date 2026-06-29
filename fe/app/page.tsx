@@ -1,7 +1,7 @@
 "use client";
 import Banner from "@/components/Banner";
 import Navbar from "@/components/Navbar";
-import { useWebRTC } from "@/hooks/useWebRTC";
+import { useWsRegister } from "@/hooks/useWSRegister";
 import { useAppStore } from "@/store/useAppStore";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -10,7 +10,7 @@ import { useState } from "react";
 export default function Home() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { connectSocket } = useWebRTC();
+  const { connectSocket } = useWsRegister();
 
   const router = useRouter();
   const setUserId = useAppStore((state) => state.setUserId);

@@ -4,6 +4,7 @@ import { create } from 'zustand';
 interface AppState {
       userId: number;
       otherUserId: number;
+      shouldStartCall: boolean;
       email: string;
       roomName: string;
       roomId: string | null;
@@ -12,17 +13,20 @@ interface AppState {
 
       setUserId: (id: number) => void;
       setOtherUserId: (id: number | null) => void;
+      setShouldStartCall: (val: boolean) => void;
       setEmail: (email: string) => void;
       setRoomName: (name: string) => void;
       setRoomId: (id: string | null) => void;
       setWsConnection: (wsConnection: any) => void;
       reset: () => void;
+      resetRoom: () => void
 }
 
 const initialState = {
       email: "",
       userId: 0,
       otherUserId: 0,
+      shouldStartCall: false,
       roomName: '',
       roomId: null,
       userWebSocketConnection: null
@@ -33,8 +37,14 @@ export const useAppStore = create<AppState>((set) => ({
       setWsConnection: (wsConnection) => set({ userWebSocketConnection: wsConnection }),
       setUserId: (id) => set({ userId: id }),
       setOtherUserId: (id) => set({ otherUserId: id }),
+      setShouldStartCall: (val) => set({ shouldStartCall: val }),
       setEmail: (email) => set({ email: email }),
       setRoomName: (name) => set({ roomName: name }),
       setRoomId: (id) => set({ roomId: id }),
       reset: () => set(initialState),
+      resetRoom: () => set({
+            roomName: "",
+            otherUserId: 0,
+            shouldStartCall: false
+      })
 }));

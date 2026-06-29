@@ -5,7 +5,7 @@ import { useAppStore } from "@/store/useAppStore";
 import { useRouter } from "next/navigation"; // ✅ import router
 import { useEffect, useState } from "react";
 import * as ws from "@/hooks/useWS";
-import { useWebRTC } from "@/hooks/useWebRTC";
+import { useWsRegister } from "@/hooks/useWSRegister";
 import Image from "next/image";
 
 export default function Room() {
@@ -21,10 +21,14 @@ export default function Room() {
   const setEmail = useAppStore((state) => state.setEmail);
   const setRoomId = useAppStore((state) => state.setRoomId);
   const setUserId = useAppStore((state) => state.setUserId);
+  const setOtherUserId = useAppStore((state) => state.setOtherUserId);
+  const setShouldStartCall = useAppStore((state) => state.setShouldStartCall);
 
-  const { socket } = useWebRTC({
+  const { socket } = useWsRegister({
     onJoinSuccess: (data) => {
       setRoomId(data.roomName);
+      setOtherUserId(data.creatorId);
+      setShouldStartCall(true);
       console.log({ data });
       alert(data.message);
       router.push(`/room/${data.roomName}`);

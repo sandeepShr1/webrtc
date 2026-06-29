@@ -3,11 +3,14 @@
 import type { Socket } from "socket.io-client";
 import * as constants from "@/constants/constants"
 import { useAppStore } from "@/store/useAppStore";
-
 type SocketHandlers = {
       onJoinSuccess?: (data: any) => void;
       onJoinFailure?: (data: any) => void;
       onRoomDisconnect?: (data: any) => void;
+      onOffer?: (offer: RTCSessionDescriptionInit) => void;
+      onAnswer?: (answer: RTCSessionDescriptionInit) => void;
+      onHandleIceCandidates?: (answer: RTCIceCandidate) => void;
+      onJoinNotify?: (data: any) => void;
 };
 
 function handleMessage(incomingMessage: any, handlers: SocketHandlers = {}) {
@@ -83,8 +86,7 @@ function normalServerProcessing(data: any, handlers: SocketHandlers = {}) {
 
                   break;
             case constants.type.ROOM_JOIN.NOTIFY:
-                  alert(data.message)
-
+                  handlers.onJoinNotify?.(data)
                   break;
 
             default:
@@ -92,17 +94,33 @@ function normalServerProcessing(data: any, handlers: SocketHandlers = {}) {
       }
 }
 function webRTCServerProcessing(data: any, handlers: SocketHandlers = {}) {
-
+      // process the message based on the type of response
+      switch (data.type) {
+            case constants.type.WEB_RTC.OFFER:
+                  handlers.onOffer?.(data.offer)
+                  break;
+            case constants.type.WEB_RTC.ANSWER:
+                  console.log({ data })
+                  handlers.onAnswer?.(data.answer)
+                  break;
+            case constants.type.WEB_RTC.ICE_CANDIDATES:
+                  handlers.onHandleIceCandidates(data)
+                  break;
+            default:
+                  break;
+      }
 }
 
 function joinSuccessHandler(data: any, handlers: SocketHandlers = {}) {
       useAppStore.getState().setOtherUserId(data.creatorId)
-      console.log("first", data, handlers)
+      // webRTCHandler.usePeerConnection().startCall()
       handlers.onJoinSuccess?.(data)
+
+
 }
 
 function exitSuccessHandler(data: any, handlers: SocketHandlers = {}) {
-      useAppStore.getState().setOtherUserId(null)
+      useAppStore.getState().resetRoom()
       console.log("first", data, handlers)
       handlers.onRoomDisconnect?.(data)
 }

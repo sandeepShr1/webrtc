@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useAppStore } from "@/store/useAppStore";
-import { useWebRTC } from "@/hooks/useWebRTC";
+import { useWsRegister } from "@/hooks/useWSRegister";
 
 export default function AppProvider({
   children,
@@ -11,7 +11,7 @@ export default function AppProvider({
 }) {
   const setEmail = useAppStore((state) => state.setEmail);
   const setUserId = useAppStore((state) => state.setUserId);
-  const { connectSocket } = useWebRTC();
+  const { connectSocket } = useWsRegister();
 
   useEffect(() => {
     const savedEmail = localStorage.getItem("email");
