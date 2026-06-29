@@ -103,3 +103,46 @@ export function joinRoom(data) {
       sendWebSocketMessageToUser(otherUserId, "join-room", NotificationMessage)
       return
 }
+
+export function exitRoom(data) {
+      const { roomName, userId } = data;
+      const existingRoom = rooms.find((room) => room.roomName === roomName);
+      const otherUserId = (existingRoom.peer1 === userId) ? existingRoom.peer2 : existingRoom.peer1;
+
+      if (!existingRoom) {
+            console.log(`Room ${roomName} does not exits.`)
+      }
+
+      // remove user from room
+      if (existingRoom.peer1 === userId) {
+            existingRoom.peer1 = null;
+            console.log(`Removed peer1 from the room object:${existingRoom}`)
+      } else {
+            existingRoom.peer2 = null;
+            console.log(`Removed peer2 from the room object`, existingRoom)
+      }
+      // clean up and remove empty rooms
+      if (existingRoom.peer1 === null & existingRoom.peer2 === null) {
+            // delete room
+            const roomIndex = rooms.findIndex(rm => {
+                  return rm.roomName === rm.roomName
+            })
+            if (roomIndex !== -1) {
+                  rooms.splice(roomIndex, 1);
+                  console.log(`Room ${roomName} has been removed as its empty`);
+                  return
+            }
+      }
+      // notify the other user that a peer has left a room
+      const notificationMessage = {
+            label: constants.labels.NORMAL_SERVER_PROCESS,
+            data: {
+                  type: constants.type.ROOM_EXIT.NOTIFY,
+                  message: `User ${userId} has left your room ${existingRoom.roomName}`,
+                  joinedId: userId,
+                  roomName: existingRoom.roomName
+            }
+      }
+      sendWebSocketMessageToUser(otherUserId, "exit-room", notificationMessage)
+      return
+}

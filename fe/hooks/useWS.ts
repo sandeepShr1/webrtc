@@ -48,7 +48,8 @@ export function registerSocketEvents(
             console.log("You have connected with our socket.io server");
             setWsConnection(socket);
       });
-      socket.on("join-room", (data) => handleMessage(data, handlers))
+      // socket.on("join-room", (data) => handleMessage(data, handlers))
+      // socket.on("exit-room", (data) => handleMessage(data, handlers))
 
       socket.on("message", (data) => handleMessage(data, handlers));
       socket.on("disconnect", handleDisconnect);
@@ -58,6 +59,8 @@ export function registerSocketEvents(
 export function bindSocketHandlers(socket: Socket, handlers: SocketHandlers = {}) {
       socket.off("join-room");
       socket.on("join-room", (data) => handleMessage(data, handlers));
+      socket.on("exit-room", (data) => handleMessage(data, handlers));
+      socket.on("disconnect", (data) => handleMessage(data, handlers));
 
       socket.off("message");
       socket.on("message", (data) => handleMessage(data, handlers));
@@ -71,8 +74,16 @@ function normalServerProcessing(data: any, handlers: SocketHandlers = {}) {
 
                   break;
 
+            case constants.type.ROOM_EXIT.NOTIFY:
+                  exitSuccessHandler(data, handlers)
+
+                  break;
             case constants.type.ROOM_DISCONNECTION.NOTIFY:
-                  handlers.onRoomDisconnect?.(data)
+                  exitSuccessHandler(data, handlers)
+
+                  break;
+            case constants.type.ROOM_JOIN.NOTIFY:
+                  alert(data.message)
 
                   break;
 
@@ -88,10 +99,13 @@ function joinSuccessHandler(data: any, handlers: SocketHandlers = {}) {
       useAppStore.getState().setOtherUserId(data.creatorId)
       console.log("first", data, handlers)
       handlers.onJoinSuccess?.(data)
-
-
 }
 
+function exitSuccessHandler(data: any, handlers: SocketHandlers = {}) {
+      useAppStore.getState().setOtherUserId(null)
+      console.log("first", data, handlers)
+      handlers.onRoomDisconnect?.(data)
+}
 export function joinRoom(socket: Socket, roomName: string, userId: number) {
       if (!socket) {
             console.log("❌ socket is null");

@@ -11,7 +11,7 @@ export const connections = [
 
 // Route Imports
 import room from "./routes/room.js";
-import { joinRoom, rooms } from "./controllers/roomController.js"
+import { joinRoom, rooms, exitRoom } from "./controllers/roomController.js"
 import * as constants from "./constants/constants.js"
 
 const app = express();
@@ -45,21 +45,21 @@ function addConnection(ws, userId) {
 
 // Handle Socket.IO connections
 io.on('connection', (socket) => {
-      const userId = socket.handshake.query.userId;   // ✅ read userId from query
+      const userId = Number(socket.handshake.query.userId);   // ✅ read userId from query
       console.log(`User connected | userId: ${userId} | socketId: ${socket.id}`);
       addConnection(socket, userId)
 
       socket.on("message", (data) => handleMessage(data))
       // ✅ handle join-room
       socket.on('join-room', ({ data }) => {
-            console.log({ rooms }, "first")
 
             joinRoom(data)
             // ✅ notify others in the room
             // socket.to(roomName).emit('user-joined', { userId, socketId: socket.id });
-            console.log({ rooms })
       });
+      socket.on("exit-room", ({ data }) => exitRoom(data))
       socket.on('disconnect', () => {
+            console.log("discommected")
             handleDisconnection(userId)
       });
 });
@@ -72,7 +72,7 @@ export function sendWebSocketMessageToUser(sendToUserId, type, message) {
       const userConnection = connections.find(connObj => connObj.userId == sendToUserId);
       if (userConnection && userConnection.wsConnection) {
             userConnection.wsConnection.emit(type, message);
-            console.log(`Message sent to ${sendToUserId}`)
+            console.log(`Message sent to ${sendToUserId}`, type)
       } else {
             console.log(`User ${sendToUserId} not found.`)
       }
@@ -100,7 +100,7 @@ function handleDisconnection(userId) {
             }
             if (otherUserId) {
                   console.log({ otherUserId }, "otherUserId")
-                  sendWebSocketMessageToUser(otherUserId, "join-room", notificationMessage)
+                  sendWebSocketMessageToUser(otherUserId, "exit-room", notificationMessage)
             } if (rm.peer1 === userId) {
                   rm.peer1 = null
             }
@@ -117,6 +117,7 @@ function handleDisconnection(userId) {
                   }
             }
       })
+      console.log("rooms", rooms)
 }
 
 function handleMessage(data) {

@@ -26,6 +26,7 @@ export default function Room() {
     onJoinSuccess: (data) => {
       setRoomId(data.roomName);
       console.log({ data });
+      alert(data.message);
       router.push(`/room/${data.roomName}`);
     },
   }); // ✅ this triggers the WS connection when component mounts

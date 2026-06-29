@@ -11,7 +11,7 @@ interface AppState {
 
 
       setUserId: (id: number) => void;
-      setOtherUserId: (id: number) => void;
+      setOtherUserId: (id: number | null) => void;
       setEmail: (email: string) => void;
       setRoomName: (name: string) => void;
       setRoomId: (id: string | null) => void;

@@ -19,9 +19,7 @@ export default function RoomPage() {
   );
   const { socket } = useWebRTC({
     onRoomDisconnect: (data) => {
-      setRoomId(null);
-      console.log({ data });
-      router.push(`/room`);
+      alert(data.message);
     },
   }); // ✅ this triggers the WS connection when component mounts
 
@@ -30,7 +28,9 @@ export default function RoomPage() {
     if (!roomName) {
       return alert("You have to join room with a valid name");
     }
+
     ws.exitRoom(socket!, roomName, userId);
+    router.replace(`/room`);
   }
 
   return (
@@ -38,7 +38,10 @@ export default function RoomPage() {
       <h1>Room: {roomName}</h1>
       <p>User ID: {userId}</p>
       <div>
-        <button onClick={() => exitRoomHandler()} className="">
+        <button
+          onClick={() => exitRoomHandler()}
+          className=" bg-orange-800 py-1 font-semibold px-1.5 rounded-md cursor-pointer hover:opacity-85"
+        >
           Exit Room
         </button>
       </div>
