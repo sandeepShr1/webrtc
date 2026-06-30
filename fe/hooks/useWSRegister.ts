@@ -11,7 +11,7 @@ type UseWebRTCOptions = {
       onRoomDisconnect?: (data: any) => void;
       onOffer?: (offer: RTCSessionDescriptionInit) => void;
       onAnswer?: (answer: RTCSessionDescriptionInit) => void;
-      onHandleIceCandidates?: (candidate: RTCIceCandidate) => void;
+      onHandleIceCandidates?: (candidate: RTCIceCandidate | any) => void;
       onJoinNotify?: (data: any) => void;
 };
 

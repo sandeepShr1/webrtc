@@ -49,7 +49,7 @@ export default function RoomPage() {
     },
     onHandleIceCandidates: (data) => {
       console.log(data, "data");
-      handleIceCandidates(data.candidatesArray);
+      handleIceCandidates(data?.candidatesArray);
     },
   }); // ✅ this triggers the WS connection when component mounts
 

@@ -9,7 +9,7 @@ type SocketHandlers = {
       onRoomDisconnect?: (data: any) => void;
       onOffer?: (offer: RTCSessionDescriptionInit) => void;
       onAnswer?: (answer: RTCSessionDescriptionInit) => void;
-      onHandleIceCandidates?: (answer: RTCIceCandidate) => void;
+      onHandleIceCandidates?: (answer: RTCIceCandidate | any) => void;
       onJoinNotify?: (data: any) => void;
 };
 
@@ -104,7 +104,7 @@ function webRTCServerProcessing(data: any, handlers: SocketHandlers = {}) {
                   handlers.onAnswer?.(data.answer)
                   break;
             case constants.type.WEB_RTC.ICE_CANDIDATES:
-                  handlers.onHandleIceCandidates(data)
+                  handlers.onHandleIceCandidates?.(data)
                   break;
             default:
                   break;
