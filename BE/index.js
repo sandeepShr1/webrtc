@@ -21,14 +21,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.use(cors({
-      origin: ['http://localhost:3000', "http://192.168.1.5:3000", "http://169.254.46.82:3000"],
+      origin: ['http://localhost:3000', "https://webrtc-inehjc2xt-sandeepshr1s-projects-e47c0dda.vercel.app", "https://webrtc-phi-ashy.vercel.app"],
       methods: ['GET', 'POST', 'PUT', 'DELETE'],
       allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
 const io = new Server(httpServer, {
       cors: {
-            origin: ['http://localhost:3000', "http://192.168.1.5:3000", "http://169.254.46.82:3000"],
+            origin: ['http://localhost:3000', "https://webrtc-inehjc2xt-sandeepshr1s-projects-e47c0dda.vercel.app", "https://webrtc-phi-ashy.vercel.app"],
             methods: ['GET', 'POST'],
       },
 });
