@@ -4,7 +4,7 @@ type Room = {
       otherUserId?: number | null;
 
 }
-const EXPRESS_URL = process.env.NEXT_PUBLIC_EXPRESS_URL ?? "http://localhost:5000";
+const EXPRESS_URL = process.env.NEXT_PUBLIC_EXPRESS_URL ?? "https://webrtc-cz0b.onrender.com";
 
 async function apiFetch<T>(endpoint: string, options?: RequestInit): Promise<T> {
       const res = await fetch(`${EXPRESS_URL}${endpoint}`, {

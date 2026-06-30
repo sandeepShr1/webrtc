@@ -16,7 +16,7 @@ export default function Home() {
   const setUserId = useAppStore((state) => state.setUserId);
   const setEmailInStore = useAppStore((state) => state.setEmail);
 
-  const loginHandler = (e) => {
+  const loginHandler = (e: any) => {
     e.preventDefault();
     const userID = Math.round(Math.random() * 1000000);
     setEmailInStore(email);

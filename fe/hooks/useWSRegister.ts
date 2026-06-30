@@ -51,7 +51,7 @@ export function useWsRegister(options: UseWebRTCOptions = {}) {
                   localStorage.setItem('userId', String(clientUserId));
             }
 
-            const socket = io('http://localhost:5000', {
+            const socket = io('https://webrtc-cz0b.onrender.com', {
                   query: { userId: clientUserId },
                   transports: ['polling', 'websocket'],
                   autoConnect: false,
