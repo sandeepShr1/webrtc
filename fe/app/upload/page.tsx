@@ -7,7 +7,7 @@ const Upload = () => {
   const handleFileChange = () => {};
   return (
     <div className="mx-2 my-5">
-      <form action="" className="grid grid-cols-12 gap-2">
+      {/* <form action="" className="grid grid-cols-12 gap-2">
         <div className="flex flex-col col-span-5  gap-2 border h-[400px] rounded-3xl items-center justify-center">
           <span className="bg-gray-900 p-3 rounded-full">
             <IoCloudUploadOutline size={28} stroke="red" />
@@ -38,7 +38,7 @@ const Upload = () => {
           />
         </div>
         <div className="border col-span-7 rounded-3xl "> Other forms</div>
-      </form>
+      </form> */}
     </div>
   );
 };

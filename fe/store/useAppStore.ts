@@ -3,7 +3,7 @@ import { create } from 'zustand';
 
 interface AppState {
       userId: number;
-      otherUserId: number;
+      otherUserId: number | null;
       shouldStartCall: boolean;
       email: string;
       roomName: string;
